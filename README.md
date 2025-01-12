@@ -1,7 +1,7 @@
 
 # Prueba tecnica Nequi para el cargo de Ingeniero de Datos
 
-### Desarrollo hecho por Ricardo Antonio Arango Quiroz
+#### Desarrollo hecho por Ricardo Antonio Arango Quiroz
 #### Medellin - Colombia, 11/01/2025
 
 ## Contexto de los datos y del desafio
@@ -51,15 +51,42 @@ Nota:Los eventos A y B corresponden a sucesos poco frecuentes relacionados con u
 
 
 ## Pipeline construido
-A continuación se muestra el pipeline construido.
+A continuación se muestra el pipeline objetivo.
 
+![Arquitectura esperada](Arquitectura-Arquitectura.drawio.png "Arquitectura")
 
-Aquí, los datos que se reciben en S3 son procesados en cuanto se reciben. Estos se limpian mediante un ETL en AWS Glue para luego ser guardados en se respectiva tabla en AWS Redshift Serverless.
+Aquí, los datos son procesados en cuanto se reciben en S3. Mediante EventBridge se captura el evento de recepción de datos, con lo cual se invoca el Step Function encargado de orquestar los pasos necesarios.
+En este pipeline, los datos se limpian mediante un ETL en AWS Glue para luego ser guardados en su respectiva tabla en AWS Redshift Serverless.
 
 ## Limpieza de datos
-### Separación de datos de localizaciones
-### Formatos de fechas
-### Valores nulos
+
+El proceso de limpieza es probablemente el mas complejo, a continuacion se van explicando los diferentes pasos:
+
+#### Verificacion de valores nulos
+Las columnas creditoid, personaid, fechacredito, valorcredito, cupototal, cupodisponibletotal no deben contener valores nulos.
+Para las filas con valores nulos en la siguientes columnas se deben descartar pues presentan errores que no se pueden reparar.
+- creditoid
+- personaid
+- fechacredito
+
+Para las filas con valores nulos en las siguientes columnas se deben imputar con valor 0.
+- valorcredito
+- cupototal
+- cupodisponibletotal
+- FrecuenciaCreditosSemana
+- CantidadCreditosUltimaSemana
+- ValorAtipicoCliente
+- ValorAtipicoComercio
+
+En la columna EventoA, imputar los valores vacios con la palabra 'NO'
+
+Otros valores nulos no suponen por ahora un mayor problema en el analisis de datos
+
+#### Variable objetivo 'Atipico'
+Esta variable solo admite los valores 0 y 1, otros valores se consideraran por ahora un error
+
+#### Separación de datos de localizaciones
+Las localizaciones GPS vienen en la forma "latitud,longitud", estos se separan en dos columnas diferentes
 
 
 ## Modelo de datos después de limpieza
