@@ -14,6 +14,9 @@ El actual reto consiste en la limpieza y preparación de datos de transacciones 
 ## Especificaciones de los datos
 Los datos suministrados consisten en aproximadamente 1.7 millones de transacciones reales realizadas en un tiempo específico. Cada transacción representa la creación de un crédito por parte de un cliente. Los datos incluyen diversas variables descriptivas, como la fecha de la transacción, el ID del almacén donde se generó el crédito, características del cliente, y otras variables adicionales. Los datos se entregarán en formato .csv.
 
+Dada la naturaleza del negocio, se debe esperar recibir nuevos registros diariamente a cualquier momento del dia.
+
+
 ## Diccionario de Datos
 Lo siguiente muestra una explicacion para los campos de datos antes de entrar en el proceso de limpieza.
 
@@ -47,7 +50,7 @@ Lo siguiente muestra una explicacion para los campos de datos antes de entrar en
 |TipoCliente|Marcación de Antiguo o Nuevo, según el tipo de cliente que esta haciendo la transaccion|
 |Atipico|Clasificación binaria, si una transacción fue considerada como atípica o no|
 
-Nota:Los eventos A y B corresponden a sucesos poco frecuentes relacionados con una interacción del cliente en un comercio
+*Nota:* Los eventos A y B corresponden a sucesos poco frecuentes relacionados con una interacción del cliente en un comercio
 
 
 ## Pipeline construido
@@ -57,6 +60,7 @@ A continuación se muestra el pipeline objetivo.
 
 Aquí, los datos son procesados en cuanto se reciben en S3. Mediante EventBridge se captura el evento de recepción de datos, con lo cual se invoca el Step Function encargado de orquestar los pasos necesarios.
 En este pipeline, los datos se limpian mediante un ETL en AWS Glue para luego ser guardados en su respectiva tabla en AWS Redshift Serverless.
+
 
 ## Limpieza de datos
 
@@ -75,6 +79,7 @@ Para las filas con valores nulos en las siguientes columnas se deben imputar con
 - cupodisponibletotal
 - FrecuenciaCreditosSemana
 - CantidadCreditosUltimaSemana
+- ValorPagosUltimosMes
 
 En la columna EventoA, imputar los valores vacios con la palabra 'NO'
 
@@ -84,7 +89,7 @@ Otros valores nulos no suponen por ahora un mayor problema en el analisis de dat
 Esta variable solo admite los valores 0 y 1, otros valores se consideraran por ahora un error
 
 #### Separación de datos de localizaciones
-Las localizaciones GPS vienen en la forma "latitud,longitud", estos se separan en dos columnas diferentes
+Las localizaciones GPS vienen en la forma "latitud,longitud", estos se separan en dos columnas diferentes, una para latitud y otra para longitud
 
 
 ## Modelo de datos después de limpieza
@@ -97,7 +102,7 @@ Respecto al modelo de datos inicial, ahora las columnas de localizacion han sido
 |LatitudEventoB|Corresponde a la Latitud del comercio donde se realizó el evento B|
 |LongitudEventoB|Corresponde a la Longitud del comercio donde se realizó el evento B|
 
-
+![Arquitectura esperada](Arquitectura-Database.drawio.png "Arquitectura")
 
 
 ### Problemas en la conexion a redshift
