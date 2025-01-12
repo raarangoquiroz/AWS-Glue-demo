@@ -61,6 +61,9 @@ A continuación se muestra el pipeline objetivo.
 Aquí, los datos son procesados en cuanto se reciben en S3. Mediante EventBridge se captura el evento de recepción de datos, con lo cual se invoca el Step Function encargado de orquestar los pasos necesarios.
 En este pipeline, los datos se limpian mediante un ETL en AWS Glue para luego ser guardados en su respectiva tabla en AWS Redshift Serverless.
 
+AWS S3 ha sido escogido como lugar de recepción de los datos, dado que estos serán manualmente ingresados después de que se han verificado como atípicos o no por parte del negocio. La captura de datos para este proyecto no se hace en vivo.
+Anazon Redshift se ha escogido debido a su capacidad de soportar usuarios concurrentes consultando los mismos datos, ademas de su capacidad para manejar grandes volúmenes de datos estructurados, lo que sera útil a medida que estos aumenten en numero.
+
 
 ## Limpieza de datos
 
@@ -86,10 +89,10 @@ En la columna EventoA, imputar los valores vacios con la palabra 'NO'
 Otros valores nulos no suponen por ahora un mayor problema en el analisis de datos
 
 #### Variable objetivo 'Atipico'
-Esta variable solo admite los valores 0 y 1, otros valores se consideraran por ahora un error
+Esta variable solo admite los valores 0 y 1, otros valores se consideraran por ahora un error y seran eliminados.
 
 #### Separación de datos de localizaciones
-Las localizaciones GPS vienen en la forma "latitud,longitud", estos se separan en dos columnas diferentes, una para latitud y otra para longitud
+Las localizaciones de los comercios y los eventos son coordenadas GPS y vienen en la forma "latitud,longitud", estos se separan en dos columnas diferentes, una para latitud y otra para longitud.
 
 
 ## Modelo de datos después de limpieza
@@ -105,7 +108,15 @@ Respecto al modelo de datos inicial, ahora las columnas de localizacion han sido
 ![Arquitectura esperada](Arquitectura-Database.drawio.png "Arquitectura")
 
 
+## Otras perspectivas
+- *Si los datos se incrementaran en 100x:* En este caso Redshift aun seguiria siendo util como datawarehouse, lo que si se deberia reconsiderar es el uso de AWS S3 y AWS Glue, se deben verificar si cumplen con estas nuevas cantidades.
+- *Si las tuberías se ejecutaran diariamente en una ventana de tiempo especifica:* En este caso, desconectar AWS EventBridge de la arquitectura, y ejecutar AWS StepFunctions de forma programada en lugar de por eventos.
+- *Si la base de datos necesitara ser accedido por más de 100 usuarios funcionales:* AWS Redshift puede manejar esto.
+- *Si se requiere hacer analítica en tiempo real, ¿cuales componentes cambiaria a su arquitectura propuesta?:* Se replantea el uso de AWS Glue y se optaria por AWS EMR, ejecutando Apache Spark, el cual si es un sistema preparado para la analitica en tiempo real.
+
+
 ### Problemas en la conexion a redshift
+Dados algunos problemas de conexion entre redshift y glue, esta es la arquitectura que funciona en este momento.
 ![Arquitectura esperada](Arquitectura-Arquitectura-real.drawio.png "Arquitectura")
 
 
