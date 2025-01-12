@@ -101,6 +101,6 @@ Respecto al modelo de datos inicial, ahora las columnas de localizacion han sido
 
 
 ### Problemas en la conexion a redshift
-![Arquitectura esperada]('Arquitectura-Arquitectura-real.drawio.png' "Arquitectura")
+![Arquitectura esperada](Arquitectura-Arquitectura-real.drawio.png "Arquitectura")
 
 
