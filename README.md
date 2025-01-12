@@ -75,8 +75,6 @@ Para las filas con valores nulos en las siguientes columnas se deben imputar con
 - cupodisponibletotal
 - FrecuenciaCreditosSemana
 - CantidadCreditosUltimaSemana
-- ValorAtipicoCliente
-- ValorAtipicoComercio
 
 En la columna EventoA, imputar los valores vacios con la palabra 'NO'
 
@@ -90,7 +88,19 @@ Las localizaciones GPS vienen en la forma "latitud,longitud", estos se separan e
 
 
 ## Modelo de datos después de limpieza
+Respecto al modelo de datos inicial, ahora las columnas de localizacion han sido eliminadas y se tienen ademas las siguientes variables:
 
-## 
+|VARIABLE|DEFINICIÓN|
+|------|------|
+|LatitudComercioCredito|Corresponde a la Latitud del comercio donde se realiza el crédito|
+|LongitudComercioCredito|Corresponde a la Longitud del comercio donde se realiza el crédito|
+|LatitudEventoB|Corresponde a la Latitud del comercio donde se realizó el evento B|
+|LongitudEventoB|Corresponde a la Longitud del comercio donde se realizó el evento B|
+
+
+
+
+### Problemas en la conexion a redshift
+![Arquitectura esperada]('Arquitectura-Arquitectura-real.drawio.png' "Arquitectura")
 
 
